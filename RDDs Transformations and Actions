@@ -1,0 +1,38 @@
+#Abrir um terminal Linux e executar o script para inicializar os serviços do Spark:
+~/scripts/sparkdev/training_setup_sparkdev.sh
+
+#Abrir um arquivo de logs do web server. Abra um segundo terminal no Linux e leia as primeiras dez linhas do arquivo executando o comando:
+head /home/training/training_materials/sparkdev/data/weblogs/2014-03-15.log
+
+#No primeiro terminal, crie um Spark Context gerando um RDD do arquivolog:
+arquivolog="file:/home/training/training_materials/sparkdev/data/weblogs/2014-03-15.log"
+logs = sc.textFile(arquivolog)
+
+#Realizar as seguintes transformações (filter) para criar um RDD que contenha apenas as linhas com os acessos (requestes) realizados às 23:00 horas. Obs: lambda é uma função anônima no python. Execute o comando:
+hora23=logs.filter(lambda x: "2014:23:00" in x)
+
+#Realizar a seguinte ação (take) para obter os três primeiros registros do RDD
+hora23.take(3)
+
+#Executar uma transformação (map) para filtrar apenas a coluna IP e na sequência uma ação (take) para obter os três primeiros IPs:
+ipsc1 = logs.map(lambda s: s.split(" ")[0], )
+ipsc1.take(3)
+
+#Realizar a ação (take) para imprimir os cinco primeiros IPs:
+for x in ipsc1.take(5): print x
+
+#Executar uma transformação (map) para filtrar as colunas IP e data/horário e na sequência uma ação (take) para obter os três primeiros registros:
+ipsdatac1c4 = logs.map(lambda s: (s.split(" ")[0],s.split(" ")[3]))
+ipsdatac1c4.take(3)
+
+#Salvar o RDD (ipsc1) final em um arquivo texto no Linux:
+ipsdatac1c4.saveAsTextFile("file:/home/training/listaip")
+
+#Em um novo terminal no Linux, inicie o spark master por meio do comando:
+sudo service spark-master start
+
+#Reinicie o serviço do spark worker por meio do comando:
+sudo service spark-worker restart
+
+#Verificar a interface web do Spark Master abrindo o navegador Firefox na VM:
+http://localhost:18080

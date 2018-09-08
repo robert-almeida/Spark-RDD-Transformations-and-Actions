@@ -36,3 +36,6 @@ sudo service spark-worker restart
 
 #Verificar a interface web do Spark Master abrindo o navegador Firefox na VM:
 http://localhost:18080
+
+#Verificar a interface web do Spark Worker abrindo o navegador Firefox na VM:
+http://localhost:4040
